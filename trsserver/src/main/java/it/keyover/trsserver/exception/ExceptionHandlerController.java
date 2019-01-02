@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import it.keyover.trsserver.common.model.ApiBaseResponse;
 
 @ControllerAdvice
-public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
 	
     @ExceptionHandler(value = { AppException.class, IllegalStateException.class })
     protected ResponseEntity<Object> handleConflict(AppException ex, WebRequest request) {

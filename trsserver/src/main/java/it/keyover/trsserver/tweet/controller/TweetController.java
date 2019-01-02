@@ -6,6 +6,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,22 +18,27 @@ import javax.servlet.http.HttpServletRequest;
 import it.keyover.trsserver.common.model.ApiBaseResponse;
 import it.keyover.trsserver.exception.AppException;
 import it.keyover.trsserver.exception.BaseException;
-import it.keyover.trsserver.exception.RestResponseEntityExceptionHandler;
-import it.keyover.trsserver.tweet.exception.HelloWorldException;
+import it.keyover.trsserver.exception.ExceptionHandlerController;
+import it.keyover.trsserver.tweet.service.ITweetService;
 
 @RestController
 @RequestMapping("tweet")
-public class TweetController extends RestResponseEntityExceptionHandler{
+public class TweetController extends ExceptionHandlerController{
 
+	@Autowired
+	ITweetService tweetService;
+	
 	@GET
-	@RequestMapping("/helloworld/{id}")
+	@RequestMapping("/retrieve")
 	@ResponseBody
-	public ResponseEntity<ApiBaseResponse> helloWorld(HttpServletRequest request, @PathVariable("id") Integer id) throws AppException {
-		if(id.intValue() > 10) {
-			ApiBaseResponse<String> apr = new ApiBaseResponse<String>(request.getRequestURI(),"Hello World!");
+	public ResponseEntity<ApiBaseResponse> retrieveTweets(HttpServletRequest request) throws AppException {
+		try {
+			Integer tweetsRetrieved = tweetService.retrieveTweets();
+			ApiBaseResponse<String> apr = new ApiBaseResponse<String>(request.getRequestURI(),"Retrieved " + tweetsRetrieved + " tweets");
 	        return new ResponseEntity<ApiBaseResponse>(apr,HttpStatus.OK);
+		} catch (BaseException e) {
+			throw new AppException(e);
 		}
-		else
-			throw new AppException(new HelloWorldException("ID must be grater than 10"));
+		
 	}
 }
