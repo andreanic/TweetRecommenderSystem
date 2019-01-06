@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.keyover.trsserver.common.model.ApiBaseResponse;
 import it.keyover.trsserver.entity.User;
 import it.keyover.trsserver.exception.AppException;
 import it.keyover.trsserver.exception.BaseException;
 import it.keyover.trsserver.exception.ExceptionHandlerController;
+import it.keyover.trsserver.model.ApiBaseResponse;
 import it.keyover.trsserver.user.service.IUserService;
 
 @RestController

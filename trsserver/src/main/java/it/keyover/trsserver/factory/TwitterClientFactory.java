@@ -1,4 +1,4 @@
-package it.keyover.trsserver.common.factory;
+package it.keyover.trsserver.factory;
 
 import it.keyover.trsserver.util.PropertyReader;
 import lombok.Getter;

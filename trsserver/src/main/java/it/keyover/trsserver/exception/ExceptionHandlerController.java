@@ -12,7 +12,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import it.keyover.trsserver.common.model.ApiBaseResponse;
+import it.keyover.trsserver.model.ApiBaseResponse;
 
 @ControllerAdvice
 public class ExceptionHandlerController extends ResponseEntityExceptionHandler {

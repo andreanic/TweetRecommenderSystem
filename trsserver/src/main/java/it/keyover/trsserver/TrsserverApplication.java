@@ -3,7 +3,7 @@ package it.keyover.trsserver;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import it.keyover.trsserver.common.factory.TwitterClientFactory;
+import it.keyover.trsserver.factory.TwitterClientFactory;
 
 @SpringBootApplication
 public class TrsserverApplication {

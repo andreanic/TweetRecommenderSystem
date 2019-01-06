@@ -1,4 +1,4 @@
-package it.keyover.trsserver.common.model;
+package it.keyover.trsserver.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
