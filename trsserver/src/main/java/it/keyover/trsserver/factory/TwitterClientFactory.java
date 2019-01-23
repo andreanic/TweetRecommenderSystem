@@ -8,13 +8,17 @@ import twitter4j.auth.AccessToken;
 import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterClientFactory {
+	private static Twitter twitter;
 	public static Twitter getTwitterClient() {
-		TwitterFactory factory = new TwitterFactory();
-	    AccessToken accessToken = new AccessToken(PropertyReader.getTwitterProperties("accessToken"),PropertyReader.getTwitterProperties("accessTokenSecret"));
-	    Twitter twitter = factory.getInstance();
-	    twitter.setOAuthConsumer(PropertyReader.getTwitterProperties("consumerKey"), PropertyReader.getTwitterProperties("consumerSecret"));
-	    twitter.setOAuthAccessToken(accessToken);
-		
+		if(twitter == null) {
+			TwitterFactory factory = new TwitterFactory();
+		    AccessToken accessToken = new AccessToken(PropertyReader.getTwitterProperties("accessToken"),PropertyReader.getTwitterProperties("accessTokenSecret"));
+		    twitter = factory.getInstance();
+		    twitter.setOAuthConsumer(PropertyReader.getTwitterProperties("consumerKey"), PropertyReader.getTwitterProperties("consumerSecret"));
+		    twitter.setOAuthAccessToken(accessToken);
+			
+		}
+
 		return twitter;
 	}
 }

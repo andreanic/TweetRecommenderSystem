@@ -49,13 +49,13 @@ public class TweetController extends ExceptionHandlerController{
 	}
 	
 	@GET
-	@RequestMapping("/usertimeline/{screenName}")
+	@RequestMapping("/usertimeline/{screenName}/{category}")
 	@ResponseBody
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public ResponseEntity<ApiBaseResponse> retrieveTweets(HttpServletRequest request, @PathVariable("screenName") String screenName) throws AppException {
+	public ResponseEntity<ApiBaseResponse> retrieveTweets(HttpServletRequest request, @PathVariable("screenName") String screenName, @PathVariable("category") String category) throws AppException {
 		try {
-			Integer tweetsRetrieved = tweetService.retrieveTweet(screenName);
+			Integer tweetsRetrieved = tweetService.retrieveTweet(screenName, category);
 			ApiBaseResponse<String> apr = new ApiBaseResponse<String>(request.getRequestURI(),"Retrieved " + tweetsRetrieved + " new tweets from " + screenName);
 	        return new ResponseEntity<ApiBaseResponse>(apr,HttpStatus.OK);
 		} catch (BaseException e) {

@@ -1,0 +1,26 @@
+<fieldset class="form-group">
+  <label>Username</label>
+  <div class="input-group">
+    <span class="input-group-addon"><i class="icon-user"></i></span>
+    <input type="text" class="form-control" [(ngModel)]="username">
+  </div>
+</fieldset>
+<fieldset class="form-group">
+  <label>Password</label>
+  <div class="input-group">
+    <span class="input-group-addon"><i class="icon-lock"></i></span>
+    <input type="password" class="form-control" [(ngModel)]="password">
+  </div>
+</fieldset>
+<!-- <fieldset class="form-group">
+  <label for="ccmonth">Biblioteca</label>
+  <select class="form-control" [(ngModel)]="codbib">
+    <option *ngFor="let biblio of biblioteche">{{biblio.descr}}</option>
+  </select>
+</fieldset> -->
+<div class="input-group">
+  <button class="btn btn-primary btn-block" 
+  (click)="login()"
+  [ladda]='isLoggingIn'
+  data-style="slide-right">Login</button>
+</div>

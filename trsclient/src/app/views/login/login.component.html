@@ -1,0 +1,22 @@
+<div class="app flex-row align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <h2>Twitter Recomander System</h2>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card-group mb-4" *ngIf="!isLoggedIn">
+          <div class="card p-4">
+            <div class="card-body">
+              <h1>Login</h1>
+              <login-form (loginSuccess)="afterLogin()"></login-form>
+            </div>
+            <div class="row justify-content-center">
+              New to Tweet Recomander System?&nbsp;<a [routerLink]="['/registration']">Sign in</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

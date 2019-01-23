@@ -35,6 +35,7 @@ import twitter4j.UserMentionEntity;
 public class TweetService implements ITweetService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(TweetService.class);
+	private static final Twitter twitter = TwitterClientFactory.getTwitterClient();
 	
 	@Autowired
 	private TweetRepository tweetRepository;
@@ -47,52 +48,55 @@ public class TweetService implements ITweetService {
 	public Integer retrieveTweets() throws BaseException{
 		Integer tweetsRetrieved = 0;
 		
-		List<TwitterUser> twitterUsers = (List<TwitterUser>) twitterUserRepository.findAll();
+		List<TwitterUser> twitterUsers = twitterUserRepository.findByVerified(true);
 		
 		if(twitterUsers.isEmpty()) {
 			throw new NoTwitterUsersFound();
 		}
 		
 		for(TwitterUser twitterUser : twitterUsers) {
-			tweetsRetrieved = Integer.sum(tweetsRetrieved, this.retrieveTweet(twitterUser.getScreenName()));
+			logger.info("Fetching tweet for " + twitterUser.getName());
+			tweetsRetrieved = Integer.sum(tweetsRetrieved, this.retrieveTweet(twitterUser.getScreenName(), twitterUser.getCategory()));
+			try {
+				logger.info("Waiting for next user");
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		return tweetsRetrieved;
 	}
 
 	@Override
-	public Integer retrieveTweet(String screenName) throws BaseException{
+	public Integer retrieveTweet(String screenName, String category) throws BaseException{
 		try {		
 			Integer tweetsRetrieved = 0;
-			Twitter twitter = TwitterClientFactory.getTwitterClient();
-			User user = this.isUserVerified(twitter.showUser(screenName));
 			
 			try {
-				this.saveTwitterUser(user);
+				this.saveTwitterUser(screenName, category);
 			}catch(BaseException e) {
 				logger.info(e.getHrMessage());				
 			}
 			
-			
 			List<Status> statuses = twitter.getUserTimeline(screenName);
 		    for (Status status : statuses) {
 		        try {
-		        	this.saveTweet(status);
+		        	this.saveTweet(status, category);
 		        	tweetsRetrieved++;
 		        }catch(BaseException e) {
 		        	logger.info(e.getHrMessage());
 		        }
-		        
-	        	if(status.getUserMentionEntities().length > 0) {
-	        		for(UserMentionEntity userMentionEntity : status.getUserMentionEntities()) {
-	    		        try {
-	    		        	User userMentioned = this.isUserVerified(twitter.showUser(userMentionEntity.getScreenName()));
-	    		        	this.saveTwitterUser(userMentioned);
-	    		        }catch(BaseException e) {
-	    		        	logger.info(e.getHrMessage());
-	    		        }
-	        		}
-	        	}
+//	        	if(status.getUserMentionEntities().length > 0) {
+//	        		for(UserMentionEntity userMentionEntity : status.getUserMentionEntities()) {
+//	    		        try {
+//	    		        	this.saveTwitterUser(userMentionEntity.getScreenName(), category);
+//	    		        }catch(BaseException e) {
+//	    		        	logger.info(e.getHrMessage());
+//	    		        }
+//	        		}
+//	        	}
 	        	
 	        	if(status.getHashtagEntities().length > 0) {
 	        		for(HashtagEntity hashtag : status.getHashtagEntities()) {
@@ -112,12 +116,13 @@ public class TweetService implements ITweetService {
 	}
 	
 	@Override
-	public Long saveTweet(Status tweet) throws BaseException {
+	public Long saveTweet(Status tweet, String category) throws BaseException {
 		if(tweetRepository.findById(tweet.getId()).isPresent()) {
 			throw new TweetAlreadyExistException();
 		}
 		
 		Tweet tweetToSave = StatusToTweetMapper.map(tweet);
+		tweetToSave.setCategory(category);
 		
 		return tweetRepository.save(tweetToSave).getId();
 	}
@@ -134,21 +139,16 @@ public class TweetService implements ITweetService {
 	}
 	
 	@Override
-	public Long saveTwitterUser(User user) throws BaseException{		
-		if(twitterUserRepository.findById(user.getId()).isPresent()) {
+	public Long saveTwitterUser(String screenName, String category) throws BaseException, TwitterException{		
+		if(twitterUserRepository.findOneByScreenName(screenName).isPresent()) {
 			throw new TwitterUserAlreadyExistException();
 		}
 		
+		User user = twitter.showUser(screenName);
 		TwitterUser twitterUserToSave = UserToTwitterUserMapper.map(user);
+		twitterUserToSave.setCategory(category);
 
 		return twitterUserRepository.save(twitterUserToSave).getId();
 	}
 	
-	private User isUserVerified(User user) throws UserNotVerifiedException {
-		if(!user.isVerified()) {
-			throw new UserNotVerifiedException();
-		}
-		
-		return user;
-	}
 }

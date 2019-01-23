@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.TextScore;
 
 import lombok.Data;
 
@@ -17,4 +18,5 @@ public class Tweet{
 	private String text;
 	private TwitterUser twitterUser;
 	private List<Hashtag> hashtags; 
+	private String category;
 }

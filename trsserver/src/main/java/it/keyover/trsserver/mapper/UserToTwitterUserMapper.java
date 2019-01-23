@@ -16,6 +16,8 @@ public class UserToTwitterUserMapper {
 		twitterUser.setId(user.getId());
 		twitterUser.setName(user.getName());
 		twitterUser.setScreenName(user.getScreenName());
+		twitterUser.setVerified(user.isVerified());
+		twitterUser.setUrlMiniImg(user.getMiniProfileImageURL());
 		
 		return twitterUser;
 	}

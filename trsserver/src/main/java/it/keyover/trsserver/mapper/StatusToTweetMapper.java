@@ -10,6 +10,10 @@ import twitter4j.Status;
 public class StatusToTweetMapper {
 
 	public static Tweet map(Status tweet) throws BaseException{
+		return StatusToTweetMapper.map(tweet,null);
+	}
+	
+	public static Tweet map(Status tweet, String category) throws BaseException{
 		
 		if(tweet == null) {
 			throw new SourceNullException(tweet.getClass().getName());
@@ -19,8 +23,8 @@ public class StatusToTweetMapper {
 		
 		tweetToMap.setId(tweet.getId());
 		tweetToMap.setText(tweet.getText());
+		tweetToMap.setCategory(category);
 		tweetToMap.setTwitterUser(UserToTwitterUserMapper.map(tweet.getUser()));
-		
 		
 		if(tweet.getHashtagEntities().length > 0) {			
 			tweetToMap.setHashtags(HashtagEntityToHashtagMapper.map(tweet.getHashtagEntities()));

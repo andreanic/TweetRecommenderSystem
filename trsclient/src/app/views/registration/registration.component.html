@@ -1,0 +1,68 @@
+<div class="app flex-row align-items-center">
+  <div class="container">
+    <div class="row justify-content-center" style="margin-top:50px;">
+      <div class="card">
+        <div class="card-header">Registration</div>
+        <div class="card-body">
+          <fieldset class="form-group">
+            <label>Username</label>
+            <div class="input-group" [class.has-danger]="registrationService.$username.length<=0">
+              <span class="input-group-addon"><i class="icon-user"></i></span>
+              <input required type="text" class="form-control" [(ngModel)]="registrationService.$username" name="username">
+            </div>
+          </fieldset>
+          <fieldset class="form-group">
+            <label>Password</label>
+            <div class="input-group" [class.has-danger]="registrationService.$password.length<=0">
+              <span class="input-group-addon"><i class="icon-lock"></i></span>
+              <input required type="password" class="form-control" [(ngModel)]="registrationService.$password">
+            </div>
+          </fieldset>
+          <div class="row">
+            <div class="col-12">
+              <h5>Implicit Filtering</h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4" *ngFor="let tweet of registrationService.$tweets; let i = index">
+              <div class="card" [class.border-primary]="registrationService.$selectedTweets.includes(tweet.id)" (click)="selectTweet(tweet)">
+                <div class="card-header">
+                  <div class="row">
+                    <div class="col-1">
+                      <img class="img-avatar" src="{{tweet.imgUrl}}">
+                    </div>
+                    <h4 class="col-10">{{tweet.user}}</h4>
+                  </div>
+                </div>
+                <div class="card-body">
+                  {{tweet.text}}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <h5>Explicit Filtering</h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-2 col-form-label" *ngFor="let category of registrationService.$categories">
+              <label>
+                <input type="checkbox" class="switch-input" [checked]="registrationService.$selectedCategories.includes(category)" (click)="selectCategory(category)">
+                <span class="switch-label" data-on="&#xf00c;" data-off="&#xf00d;"></span>
+                <span class="switch-handle"></span>
+              </label>
+              <label (click)="selectCategory(category)">{{category}}</label>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button class="btn btn-primary" type="button" (click)="saveUser()" [disabled]="registrationService.$username.length<=0 || registrationService.$password.length<=0">Register</button>
+          <button class="btn btn-secondary" type="button" (click)="resetForm()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<toaster-container [toasterconfig]="toasterConfig"></toaster-container>

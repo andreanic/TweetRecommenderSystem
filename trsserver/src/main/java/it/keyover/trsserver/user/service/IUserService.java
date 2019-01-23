@@ -5,4 +5,5 @@ import it.keyover.trsserver.exception.BaseException;
 
 public interface IUserService {
 	public String registerUser(User user) throws BaseException;
+	public String login(User user) throws BaseException;
 }

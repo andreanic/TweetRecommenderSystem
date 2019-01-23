@@ -1,0 +1,70 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 30-gen-2018, 10.23.33
+    Author     : carmine
+*/
+
+// Bootstrap overrides
+
+//
+// Custom color
+//
+$custom_orange:                     #E3BE47;
+$orange:                            #E3BE47;
+
+$navbar-brand-bg:                   transparent;
+$navbar-brand-logo-size:            210px auto;
+$navbar-brand-border:               none;
+$dark-bar-height:                   32px;
+$navbar-height:                     32px;
+
+.dark-bar {
+    position: fixed;
+    z-index: 1025;
+    color: #fff;
+    background-color: #384042;
+    border-color: #384042;
+    margin-top:0px;
+    height: $dark-bar-height;
+    width: 110%;
+  }
+
+.font-modulo {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+    margin-left: 25px;
+}
+
+.operatore-info{
+    margin-right: 15px;
+    margin-top: 10px;
+}
+
+.fix-select {
+    display: flex;
+    width: 100%;
+  }
+  
+.ngx-select {
+    width: 100%;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.table-border{
+    border-color: white;
+}
+
+.table tr.scaduta td{
+    background-color:#fd5656;
+}
+
+.has-danger{
+    border-color:#ff5454;
+}
