@@ -1,0 +1,31 @@
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-12">
+        <label>Retrieve Tweets by Category</label>
+    </div>
+  </div>
+  <div class="row" *ngIf="functionService.$categories.length > 0; else allTweetsCategoryRetrieved">
+    <div class="col-6">
+      <fieldset class="form-group">
+        <select class="form-control" [(ngModel)]="functionService.$category">
+          <option *ngFor="let category of functionService.$categories">{{category}}</option>
+        </select>
+      </fieldset>
+    </div>
+    <div class="col-2">
+      <span class="input-group-btn">
+        <button class="btn btn-primary" style="margin-left:-30px;" (click)="retrieveTweets()" data-style="expand-right" [ladda]='isFunctionRetrieving'>Retrieve</button>
+      </span>
+    </div>
+  </div>
+
+  <ng-template #allTweetsCategoryRetrieved>
+    <div class="row">
+      <div class="col-12">
+        <p>All Tweets Retrieved For Each Category</p>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+<toaster-container [toasterconfig]="toasterConfig"></toaster-container>

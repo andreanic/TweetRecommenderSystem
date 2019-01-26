@@ -7,63 +7,37 @@ import { UserDTO } from 'app/model/UserDTO';
 @Injectable()
 export class RegistrationService {
 
-  private tweets: any[] = [{
-    user:"Carlo Cracco",
-    text: "Che bello masterchef 8!",
-    imgUrl: "https://pbs.twimg.com/profile_images/833104478328877056/8z-8v1Fw_mini.jpg",
-    id: 1,
-    category: "Cucina",
-  },{
-    user:"Carlo Cracco",
-    text: "Che bello masterchef 8!",
-    imgUrl: "https://pbs.twimg.com/profile_images/833104478328877056/8z-8v1Fw_mini.jpg",
-    id: 2,
-    category: "Cucina",
-  },{
-    user:"Carlo Cracco",
-    text: "Che bello masterchef 8!",
-    imgUrl: "https://pbs.twimg.com/profile_images/833104478328877056/8z-8v1Fw_mini.jpg",
-    id: 3,
-    category: "Cucina",
-  },{
-    user:"Carlo Cracco",
-    text: "Che bello masterchef 8!",
-    imgUrl: "https://pbs.twimg.com/profile_images/833104478328877056/8z-8v1Fw_mini.jpg",
-    id: 4,
-    category: "Cucina",
-  }];
-
-  private categories: string[] = ["prova1","prova2","prova3","prova4","prova5","prova6","prova7"];
-
+  private tweets: any[];
+  private categories: String[];
   private selectedTweets: number[] = [];
-  private selectedCategories: string[] = [];
-  private username: string = "";
-  private password: string = "";
+  private selectedCategories: String[] = [];
+  private username: String = "";
+  private password: String = "";
 
   constructor(private tweetRepository: TweetRepositoryService,
               private userRepository: UserRepositoryService,) { }
 
-  public initSelectionArray(): void{
+  public initSelectionArrays(): void{
     this.tweetRepository.getCategories().subscribe(response => {
-      this.categories = response.payload;
+      this.categories = response;
     }, err => {
-      console.log(err._body.message);
+      console.log(err.payload);
     });
 
-    this.tweetRepository.getRelevantTweets().subscribe(response => {
-      this.tweets = response.payload;
+    this.tweetRepository.getOneTweetByCategory().subscribe(response => {
+      this.tweets = response;
     }, err => {
-      console.log(err);
+      console.log(err.payload);
     })
   }
 
-  public selectTweet(tweet: any): void{
-    const index = this.selectedTweets.indexOf(tweet.id);
+  public selectTweet(i: number): void{
+    const index = this.selectedTweets.indexOf(i);
     if (index > -1) {
       this.selectedTweets.splice(index, 1);
     }
     else{
-      this.selectedTweets.push(tweet.id);
+      this.selectedTweets.push(i);
     }    
     
   }
@@ -105,8 +79,10 @@ export class RegistrationService {
       if(!user.$preferences.includes(this.tweets[index].category)){
         user.$preferences.push(this.tweets[index].category);
       }
+
+      user.$tweetsLiked.push(this.tweets[index].twitterid);
     });
-    console.log(user);
+    
     return user;
   }
 
@@ -129,17 +105,17 @@ export class RegistrationService {
 
     /**
      * Getter $categories
-     * @return {string[] }
+     * @return {String[] }
      */
-	public get $categories(): string[]  {
+	public get $categories(): String[]  {
 		return this.categories;
 	}
 
     /**
      * Setter $categories
-     * @param {string[] } value
+     * @param {String[] } value
      */
-	public set $categories(value: string[] ) {
+	public set $categories(value: String[] ) {
 		this.categories = value;
 	}
 
@@ -153,9 +129,9 @@ export class RegistrationService {
 
     /**
      * Getter $selectedCategories
-     * @return {string[] }
+     * @return {String[] }
      */
-	public get $selectedCategories(): string[]  {
+	public get $selectedCategories(): String[]  {
 		return this.selectedCategories;
 	}
 
@@ -169,42 +145,42 @@ export class RegistrationService {
 
     /**
      * Setter $selectedCategories
-     * @param {string[] } value
+     * @param {String[] } value
      */
-	public set $selectedCategories(value: string[] ) {
+	public set $selectedCategories(value: String[] ) {
 		this.selectedCategories = value;
   }
   
 
     /**
      * Getter $username
-     * @return {string }
+     * @return {String }
      */
-	public get $username(): string  {
+	public get $username(): String  {
 		return this.username;
 	}
 
     /**
      * Getter $password
-     * @return {string }
+     * @return {String }
      */
-	public get $password(): string  {
+	public get $password(): String  {
 		return this.password;
 	}
 
     /**
      * Setter $username
-     * @param {string } value
+     * @param {String } value
      */
-	public set $username(value: string ) {
+	public set $username(value: String ) {
 		this.username = value;
 	}
 
     /**
      * Setter $password
-     * @param {string } value
+     * @param {String } value
      */
-	public set $password(value: string ) {
+	public set $password(value: String ) {
 		this.password = value;
 	}
 

@@ -16,12 +16,13 @@ public class StatusToTweetMapper {
 	public static Tweet map(Status tweet, String category) throws BaseException{
 		
 		if(tweet == null) {
-			throw new SourceNullException(tweet.getClass().getName());
+			throw new SourceNullException(Status.class.getName());
 		}
 		
 		Tweet tweetToMap = new Tweet();
 		
 		tweetToMap.setId(tweet.getId());
+		tweetToMap.setTwitterid(Long.toString(tweet.getId()));
 		tweetToMap.setText(tweet.getText());
 		tweetToMap.setCategory(category);
 		tweetToMap.setTwitterUser(UserToTwitterUserMapper.map(tweet.getUser()));

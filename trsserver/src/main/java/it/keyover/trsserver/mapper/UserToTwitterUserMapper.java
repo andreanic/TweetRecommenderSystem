@@ -9,7 +9,7 @@ public class UserToTwitterUserMapper {
 	public static TwitterUser map(User user) throws BaseException{
 		
 		if(user == null) {
-			throw new SourceNullException(user.getClass().getName());
+			throw new SourceNullException(User.class.getName());
 		}
 		
 		TwitterUser twitterUser = new TwitterUser();

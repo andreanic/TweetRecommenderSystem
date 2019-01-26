@@ -4,6 +4,7 @@ import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { TweetSearchComponent } from './tweet-search.component';
 import { TweetSearchRoutingModule } from './tweet-search-routing.module';
 import { SharedModule } from 'app/module/shared-module.module';
+import { TweetSearchService } from './tweet-search.service';
 
 @NgModule({
   imports: [
@@ -11,6 +12,7 @@ import { SharedModule } from 'app/module/shared-module.module';
     ChartsModule,
     SharedModule
   ],
-  declarations: [ TweetSearchComponent ]
+  declarations: [ TweetSearchComponent ],
+  providers: [TweetSearchService]
 })
 export class TweetSearchModule { }

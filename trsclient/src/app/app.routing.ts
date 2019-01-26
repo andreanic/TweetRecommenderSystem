@@ -28,6 +28,10 @@ export const routes: Routes = [
         path: 'tweetsearch',
         loadChildren: './views/tweetsearch/tweet-search.module#TweetSearchModule'
       },
+      {
+        path: 'serverfunction',
+        loadChildren: './views/function/function.module#FunctionModule'
+      },
     ]
   },
   {

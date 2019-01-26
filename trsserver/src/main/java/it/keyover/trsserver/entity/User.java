@@ -13,6 +13,7 @@ public class User {
 	private String username;
 	private String password;
 	private List<String> preferences;
+	private List<String> tweetsLiked;
 }
 
 

@@ -16,22 +16,22 @@ export class UtilService {
       timeout: 4000
     });
 
-  constructor() { 
+  constructor(private cookieService: CookieService) { 
   }
 
   public getToasterConfig(): ToasterConfig{
     return this.toasterConfig;
   }
 
+  public createHeaderOptions(): RequestOptions{
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+    headers.append('Authorization', this.cookieService.get("token"));
 
-  public handleError(error): ErrorObservable{
-    console.log("Errore");
-    console.log(error);
-    if(error.status == 403){
-    }
+    const options = new RequestOptions({headers: headers, withCredentials: true});
 
-    return new ErrorObservable("Impossibile collegarsi al server.");
-  };
+    return options
+  }
 
   public showToastMessage(type: string, title: string, message: string, toasterService: ToasterService): void{
     toasterService.pop(type, title, message);

@@ -1,3 +1,65 @@
 <div class="animated fadeIn">
-  Hello World!
+  <div class="row">
+    <div class="col-7">
+      <form>
+        <div class="form-group">
+          <label>Search Query</label>
+          <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-search"></i></span>
+            <input type="text" class="form-control" placeholder="Type your query here..." [(ngModel)]="tweetSearchService.$query"
+              name="query" />
+            <span class="input-group-btn">
+              <button class="btn btn-primary btn-sm" (click)="fullTextSearch()" data-style="expand-right" [ladda]='isQueryLoading'
+                [disabled]="tweetSearchService.$query.length<3">Search</button>
+            </span>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-5">
+      <fieldset class="form-group">
+        <label>Category</label>
+        <select class="form-control" [(ngModel)]="tweetSearchService.$category">
+          <option>{{tweetSearchService.$allCategories}}</option>
+          <option *ngFor="let category of tweetSearchService.$categories">{{category}}</option>
+        </select>
+      </fieldset>
+    </div>
+  </div>
+
+  <div *ngIf="tweetSearchService.$tweetsFound">
+    <div class="row">
+      <div class="col-12">
+        <h5>Query Result</h5>
+      </div>
+    </div>
+    <div class="row" *ngIf="tweetSearchService.$tweetsFound.length > 0; else noTweetsFound">
+      <div class="col-4" *ngFor="let tweet of tweetSearchService.$tweetsFound; let i = index">
+        <div class="card">
+          <div class="card-header">
+            <div class="row">
+              <div class="col-1">
+                <img class="img-avatar" src="{{tweet.twitterUser.urlMiniImg}}">
+              </div>
+              <h4 class="col-10">{{tweet.twitterUser.name}}</h4>
+            </div>
+          </div>
+          <div class="card-body" style="min-height: 165px;">
+            {{tweet.text}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noTweetsFound>
+    <div class="row">
+      <div class="col-12">
+        <p>No Tweets Found</p>
+      </div>
+    </div>
+  </ng-template>
+
 </div>
+
+<toaster-container [toasterconfig]="toasterConfig"></toaster-container>

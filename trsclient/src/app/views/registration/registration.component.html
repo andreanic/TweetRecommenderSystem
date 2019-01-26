@@ -5,14 +5,14 @@
         <div class="card-header">Registration</div>
         <div class="card-body">
           <fieldset class="form-group">
-            <label>Username</label>
+            <label>Username*</label>
             <div class="input-group" [class.has-danger]="registrationService.$username.length<=0">
               <span class="input-group-addon"><i class="icon-user"></i></span>
               <input required type="text" class="form-control" [(ngModel)]="registrationService.$username" name="username">
             </div>
           </fieldset>
           <fieldset class="form-group">
-            <label>Password</label>
+            <label>Password*</label>
             <div class="input-group" [class.has-danger]="registrationService.$password.length<=0">
               <span class="input-group-addon"><i class="icon-lock"></i></span>
               <input required type="password" class="form-control" [(ngModel)]="registrationService.$password">
@@ -20,21 +20,24 @@
           </fieldset>
           <div class="row">
             <div class="col-12">
-              <h5>Implicit Filtering</h5>
+              <h5>Implicit Filtering*</h5>
+            </div>
+            <div class="col-12">
+              <p>Choose one or more tweets you like</p>
             </div>
           </div>
           <div class="row">
             <div class="col-4" *ngFor="let tweet of registrationService.$tweets; let i = index">
-              <div class="card" [class.border-primary]="registrationService.$selectedTweets.includes(tweet.id)" (click)="selectTweet(tweet)">
+              <div class="card" [class.border-primary]="registrationService.$selectedTweets.includes(i)" (click)="selectTweet(i)">
                 <div class="card-header">
                   <div class="row">
                     <div class="col-1">
-                      <img class="img-avatar" src="{{tweet.imgUrl}}">
+                      <img class="img-avatar" src="{{tweet.twitterUser.urlMiniImg}}">
                     </div>
-                    <h4 class="col-10">{{tweet.user}}</h4>
+                    <h4 class="col-10">{{tweet.twitterUser.name}}</h4>
                   </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="min-height: 165px;">
                   {{tweet.text}}
                 </div>
               </div>
@@ -42,7 +45,10 @@
           </div>
           <div class="row">
             <div class="col-12">
-              <h5>Explicit Filtering</h5>
+              <h5>Explicit Filtering*</h5>
+            </div>
+            <div class="col-12">
+              <p>Choose one or more categories you like</p>
             </div>
           </div>
           <div class="row">
@@ -52,12 +58,15 @@
                 <span class="switch-label" data-on="&#xf00c;" data-off="&#xf00d;"></span>
                 <span class="switch-handle"></span>
               </label>
-              <label (click)="selectCategory(category)">{{category}}</label>
+              <label (click)="selectCategory(category)">{{category | titlecase}}</label>
             </div>
           </div>
         </div>
         <div class="card-footer">
-          <button class="btn btn-primary" type="button" (click)="saveUser()" [disabled]="registrationService.$username.length<=0 || registrationService.$password.length<=0">Register</button>
+          <button class="btn btn-primary" type="button" (click)="saveUser()" 
+          [disabled]="registrationService.$username.length<=0 || registrationService.$password.length<=0 || ( registrationService.$selectedCategories.length<=0 && registrationService.$selectedTweets.length<=0)"
+          data-style="expand-right" 
+          [ladda]='isRegistrationLoading'>Register</button>
           <button class="btn btn-secondary" type="button" (click)="resetForm()">Cancel</button>
         </div>
       </div>

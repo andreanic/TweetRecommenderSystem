@@ -1,7 +1,7 @@
 <div class="app flex-row align-items-center">
   <div class="container">
     <div class="row justify-content-center">
-      <h2>Twitter Recomander System</h2>
+      <h2>Twitter Recommander System</h2>
     </div>
     <div class="row justify-content-center">
       <div class="col-md-8">
@@ -9,10 +9,29 @@
           <div class="card p-4">
             <div class="card-body">
               <h1>Login</h1>
-              <login-form (loginSuccess)="afterLogin()"></login-form>
+              <fieldset class="form-group">
+                <label>Username</label>
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="icon-user"></i></span>
+                  <input type="text" class="form-control" [(ngModel)]="loginService.$username">
+                </div>
+              </fieldset>
+              <fieldset class="form-group">
+                <label>Password</label>
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="icon-lock"></i></span>
+                  <input type="password" class="form-control" [(ngModel)]="loginService.$password">
+                </div>
+              </fieldset>
+              <div class="input-group">
+                <button class="btn btn-primary btn-block" 
+                (click)="login()"
+                [ladda]='isLoggingIn'
+                data-style="slide-right">Login</button>
+              </div>
             </div>
             <div class="row justify-content-center">
-              New to Tweet Recomander System?&nbsp;<a [routerLink]="['/registration']">Sign in</a>
+              New to Tweet Recommander System?&nbsp;<a [routerLink]="['/registration']">Sign in</a>
             </div>
           </div>
         </div>
@@ -20,3 +39,5 @@
     </div>
   </div>
 </div>
+
+<toaster-container [toasterconfig]="toasterConfig"></toaster-container>

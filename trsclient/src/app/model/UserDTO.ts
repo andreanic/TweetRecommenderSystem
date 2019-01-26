@@ -2,6 +2,7 @@ export class UserDTO {
     private username: String;
     private password: String;
     private preferences: String [] = [];
+    private tweetsLiked: number[] = [];
 
     constructor(){};
 
@@ -53,5 +54,21 @@ export class UserDTO {
 		this.preferences = value;
 	}
 
+
+    /**
+     * Getter $tweetsLiked
+     * @return {number[] }
+     */
+	public get $tweetsLiked(): number[]  {
+		return this.tweetsLiked;
+	}
+
+    /**
+     * Setter $tweetsLiked
+     * @param {number[] } value
+     */
+	public set $tweetsLiked(value: number[] ) {
+		this.tweetsLiked = value;
+	}
 
 }

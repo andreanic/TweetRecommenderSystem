@@ -14,6 +14,7 @@ import lombok.Data;
 public class Tweet{
 	@Id
 	private Long id;
+	private String twitterid;
 	@TextIndexed
 	private String text;
 	private TwitterUser twitterUser;

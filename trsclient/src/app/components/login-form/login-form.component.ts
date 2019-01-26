@@ -30,12 +30,11 @@ export class LoginFormComponent implements OnInit {
       password: this.password,
     }).finally(() => {
       this.isLoggingIn = false;
-      this.loginSuccess.emit();
     }).subscribe(response => {
       this.loginSuccess.emit();
     },
     err => {
-      console.log(err);
+      console.log(err.payload);
     });
   }
 }

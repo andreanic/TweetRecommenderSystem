@@ -1,6 +1,7 @@
 package it.keyover.trsserver.user.controller;
 
 import java.security.Principal;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import it.keyover.trsserver.entity.Tweet;
 import it.keyover.trsserver.entity.User;
 import it.keyover.trsserver.exception.AppException;
 import it.keyover.trsserver.exception.BaseException;
@@ -40,8 +42,7 @@ public class UserController extends ExceptionHandlerController{
 	public ResponseEntity<ApiBaseResponse> saveUser(HttpServletRequest request, @RequestBody User user) throws AppException {
 		try {
 			String userId = userService.registerUser(user);
-			ApiBaseResponse<String> apr = new ApiBaseResponse<String>(request.getRequestURI(),"User saved with ID: " + userId);
-	        return new ResponseEntity<ApiBaseResponse>(apr,HttpStatus.OK);
+	        return this.login(request, user);
 		} catch (BaseException e) {
 			throw new AppException(e);
 		}
@@ -63,13 +64,18 @@ public class UserController extends ExceptionHandlerController{
 	}
 	
 	@GET
-	@RequestMapping("/test")
+	@RequestMapping("/getLikedTweets")
 	@ResponseBody
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public ResponseEntity<ApiBaseResponse> test(HttpServletRequest request, Authentication auth) throws AppException {
-		User user = (User) auth.getPrincipal();
-		ApiBaseResponse<String> apr = new ApiBaseResponse<String>(request.getRequestURI(),user.getUsername());
-		return new ResponseEntity<ApiBaseResponse>(apr,HttpStatus.OK);
+	public ResponseEntity<ApiBaseResponse> getLikedTweets(HttpServletRequest request, Authentication auth) throws AppException {
+		try {
+			User user = (User) auth.getPrincipal();
+			List<Tweet> tweetsLiked = userService.getLikedTweets(user.getUsername());
+			ApiBaseResponse<List<Tweet>> apr = new ApiBaseResponse<List<Tweet>>(request.getRequestURI(),tweetsLiked);
+			return new ResponseEntity<ApiBaseResponse>(apr,HttpStatus.OK);
+		} catch (BaseException e) {
+			throw new AppException(e);
+		}
 	}
 }

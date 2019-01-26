@@ -12,7 +12,7 @@ public class HashtagEntityToHashtagMapper {
 
 	public static Hashtag map(HashtagEntity hashtag) throws BaseException{
 		if(hashtag == null) {
-			throw new SourceNullException(hashtag.getClass().getName());
+			throw new SourceNullException(HashtagEntity.class.getName());
 		}
 		Hashtag hashtagToMap = new Hashtag();
 		

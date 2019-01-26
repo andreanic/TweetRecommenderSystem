@@ -12,5 +12,11 @@ export const navigation = [
     url: '/tweetsearch',
     icon: 'icon-speedometer',
     children: null,
+  },
+  {
+    name: 'Server Function',
+    url: '/serverfunction',
+    icon: 'icon-speedometer',
+    children: null,
   }
 ];

@@ -1,17 +1,23 @@
 package it.keyover.trsserver.tweet.service;
 
+import java.util.List;
+
+import it.keyover.trsserver.entity.Tweet;
+import it.keyover.trsserver.entity.User;
 import it.keyover.trsserver.exception.BaseException;
+import it.keyover.trsserver.tweet.model.SearchDTO;
 import twitter4j.HashtagEntity;
 import twitter4j.Status;
 import twitter4j.TwitterException;
-import twitter4j.User;
-import twitter4j.UserMentionEntity;
-
 
 public interface ITweetService {
-	public Integer retrieveTweets() throws BaseException;
+	public Integer retrieveTweets(String category) throws BaseException;
 	public Integer retrieveTweet(String screenName, String category) throws BaseException;
 	public Long saveTweet(Status tweet, String category) throws BaseException;
 	public String saveHashtag(HashtagEntity hashtag) throws BaseException;
-	public Long saveTwitterUser(String screenName, String category) throws BaseException, TwitterException;
+	public Long saveTwitterUser(String screenName, String category) throws BaseException;
+	public String[] getCategories() throws BaseException;
+	public List<Tweet> getOneTweetByCategory() throws BaseException;
+	public List<Tweet> getTweetsByQueryAndCategory(SearchDTO search) throws BaseException;
+	public List<Tweet> getTweetsByQueryAndUserPreferences(SearchDTO search, User user) throws BaseException;
 }

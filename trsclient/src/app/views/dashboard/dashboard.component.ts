@@ -21,9 +21,10 @@ export class DashboardComponent implements OnInit{
   private toasterConfig: ToasterConfig;
 
   constructor(private utils: UtilService,
-              private registrationService: RegistrationService){}
+              private dashboardService: DashboardService){}
 
   ngOnInit(){
     this.toasterConfig = this.utils.getToasterConfig();
+    this.dashboardService.initTweetsArrays();
   }
 }

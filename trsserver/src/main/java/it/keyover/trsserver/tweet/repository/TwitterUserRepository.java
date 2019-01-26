@@ -10,6 +10,6 @@ import it.keyover.trsserver.entity.TwitterUser;
 
 @Repository
 public interface TwitterUserRepository extends PagingAndSortingRepository<TwitterUser, Long> {
-	public List<TwitterUser> findByVerified(Boolean verified);
+	public List<TwitterUser> findByCategory(String category);
 	public Optional<TwitterUser> findOneByScreenName(String screenName);
 }

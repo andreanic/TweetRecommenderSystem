@@ -1,35 +1,41 @@
 package it.keyover.trsserver.tweet.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import it.keyover.trsserver.entity.Hashtag;
 import it.keyover.trsserver.entity.Tweet;
 import it.keyover.trsserver.entity.TwitterUser;
+import it.keyover.trsserver.entity.User;
 import it.keyover.trsserver.exception.BaseException;
 import it.keyover.trsserver.factory.TwitterClientFactory;
+import it.keyover.trsserver.lucene.service.ILuceneService;
 import it.keyover.trsserver.mapper.HashtagEntityToHashtagMapper;
 import it.keyover.trsserver.mapper.StatusToTweetMapper;
 import it.keyover.trsserver.mapper.UserToTwitterUserMapper;
 import it.keyover.trsserver.tweet.exception.HashtagAlreadExistException;
 import it.keyover.trsserver.tweet.exception.NoTwitterUsersFound;
+import it.keyover.trsserver.tweet.exception.RetrieveCategoriesException;
 import it.keyover.trsserver.tweet.exception.RetrieveTweetsException;
 import it.keyover.trsserver.tweet.exception.TweetAlreadyExistException;
+import it.keyover.trsserver.tweet.exception.TweetsNotFoundException;
 import it.keyover.trsserver.tweet.exception.TwitterUserAlreadyExistException;
 import it.keyover.trsserver.tweet.exception.UserNotVerifiedException;
+import it.keyover.trsserver.tweet.model.SearchDTO;
 import it.keyover.trsserver.tweet.repository.HashtagRepository;
 import it.keyover.trsserver.tweet.repository.TweetRepository;
 import it.keyover.trsserver.tweet.repository.TwitterUserRepository;
+import it.keyover.trsserver.util.PropertyReader;
 import twitter4j.HashtagEntity;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.User;
-import twitter4j.UserMentionEntity;
 
 @Service
 public class TweetService implements ITweetService {
@@ -44,11 +50,14 @@ public class TweetService implements ITweetService {
 	@Autowired
 	private TwitterUserRepository twitterUserRepository;
 	
+	@Autowired
+	private ILuceneService luceneService;
+	
 	@Override
-	public Integer retrieveTweets() throws BaseException{
+	public Integer retrieveTweets(String category) throws BaseException{
 		Integer tweetsRetrieved = 0;
 		
-		List<TwitterUser> twitterUsers = twitterUserRepository.findByVerified(true);
+		List<TwitterUser> twitterUsers = twitterUserRepository.findByCategory(category);
 		
 		if(twitterUsers.isEmpty()) {
 			throw new NoTwitterUsersFound();
@@ -57,13 +66,6 @@ public class TweetService implements ITweetService {
 		for(TwitterUser twitterUser : twitterUsers) {
 			logger.info("Fetching tweet for " + twitterUser.getName());
 			tweetsRetrieved = Integer.sum(tweetsRetrieved, this.retrieveTweet(twitterUser.getScreenName(), twitterUser.getCategory()));
-			try {
-				logger.info("Waiting for next user");
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		
 		return tweetsRetrieved;
@@ -88,15 +90,6 @@ public class TweetService implements ITweetService {
 		        }catch(BaseException e) {
 		        	logger.info(e.getHrMessage());
 		        }
-//	        	if(status.getUserMentionEntities().length > 0) {
-//	        		for(UserMentionEntity userMentionEntity : status.getUserMentionEntities()) {
-//	    		        try {
-//	    		        	this.saveTwitterUser(userMentionEntity.getScreenName(), category);
-//	    		        }catch(BaseException e) {
-//	    		        	logger.info(e.getHrMessage());
-//	    		        }
-//	        		}
-//	        	}
 	        	
 	        	if(status.getHashtagEntities().length > 0) {
 	        		for(HashtagEntity hashtag : status.getHashtagEntities()) {
@@ -139,16 +132,68 @@ public class TweetService implements ITweetService {
 	}
 	
 	@Override
-	public Long saveTwitterUser(String screenName, String category) throws BaseException, TwitterException{		
+	public Long saveTwitterUser(String screenName, String category) throws BaseException{		
 		if(twitterUserRepository.findOneByScreenName(screenName).isPresent()) {
 			throw new TwitterUserAlreadyExistException();
 		}
 		
-		User user = twitter.showUser(screenName);
+		twitter4j.User user = null;
+		try {
+			user = twitter.showUser(screenName);
+		} catch (TwitterException e) {
+			logger.error(e.getErrorMessage());
+			throw new UsernameNotFoundException(e.getErrorMessage());
+		}
 		TwitterUser twitterUserToSave = UserToTwitterUserMapper.map(user);
 		twitterUserToSave.setCategory(category);
 
 		return twitterUserRepository.save(twitterUserToSave).getId();
+	}
+
+	@Override
+	public List<Tweet> getOneTweetByCategory() throws BaseException {
+		String[] categories = PropertyReader.getCategories();
+		
+		List<Tweet> tweets = new ArrayList<Tweet>();
+		
+		for(String category : categories) {
+			tweets.add(tweetRepository.findFirstByCategory(category));
+		}
+		
+		if(tweets.isEmpty()) {
+			throw new TweetsNotFoundException();
+		}
+		
+		return tweets;
+	}
+
+	@Override
+	public String[] getCategories() throws BaseException {
+		String[] categories = PropertyReader.getCategories();
+		
+		if(categories.length == 0) {
+			throw new RetrieveCategoriesException();
+		}
+		logger.info("Categories retrieved");
+		return categories;
+	}
+
+	@Override
+	public List<Tweet> getTweetsByQueryAndCategory(SearchDTO search) throws BaseException {
+		List<String> categories = new ArrayList<String>();
+		if(search.getCategory() != null) {
+			categories.add(search.getCategory());
+		}
+		
+		List<String> twitterids = luceneService.getTweetsTwitterIdFromIndex(search.getQuery(), categories, search.getSearchType());
+		
+		return tweetRepository.findByTwitteridIn(twitterids);
+	}
+
+	@Override
+	public List<Tweet> getTweetsByQueryAndUserPreferences(SearchDTO search, User user)	throws BaseException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

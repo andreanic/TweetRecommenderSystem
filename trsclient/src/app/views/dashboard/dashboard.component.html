@@ -4,18 +4,18 @@
             <h5>Tweet Liked</h5>
         </div>
     </div>
-    <div class="row">
-        <div class="col-4" *ngFor="let tweet of registrationService.$tweets; let i = index">
-            <div class="card" [class.border-primary]="registrationService.$selectedTweets.includes(tweet.id)" (click)="selectTweet(tweet)">
+    <div class="row" *ngIf="dashboardService.$likedTweets.length > 0; else noTweetsFound">
+        <div class="col-4" *ngFor="let tweet of dashboardService.$likedTweets; let i = index">
+            <div class="card">
                 <div class="card-header">
                     <div class="row">
                         <div class="col-1">
-                            <img class="img-avatar" src="{{tweet.imgUrl}}">
+                            <img class="img-avatar" src="{{tweet.twitterUser.urlMiniImg}}">
                         </div>
-                        <h4 class="col-10">{{tweet.user}}</h4>
+                        <h4 class="col-10">{{tweet.twitterUser.name}}</h4>
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="min-height: 165px;">
                     {{tweet.text}}
                 </div>
             </div>
@@ -23,27 +23,34 @@
     </div>
 
     <div class="row">
-            <div class="col-12">
-                <h5>Tweet Recomanded</h5>
-            </div>
+        <div class="col-12">
+            <h5>Tweet Recommanded</h5>
         </div>
-        <div class="row">
-            <div class="col-4" *ngFor="let tweet of registrationService.$tweets; let i = index">
-                <div class="card" [class.border-primary]="registrationService.$selectedTweets.includes(tweet.id)" (click)="selectTweet(tweet)">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-1">
-                                <img class="img-avatar" src="{{tweet.imgUrl}}">
-                            </div>
-                            <h4 class="col-10">{{tweet.user}}</h4>
+    </div>
+    <div class="row" *ngIf="dashboardService.$recommandedTweets.length > 0; else noTweetsFound">
+        <div class="col-4" *ngFor="let tweet of dashboardService.$recommandedTweets; let i = index">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-1">
+                            <img class="img-avatar" src="{{tweet.twitterUser.urlMiniImg}}">
                         </div>
+                        <h4 class="col-10">{{tweet.twitterUser.name}}</h4>
                     </div>
-                    <div class="card-body">
-                        {{tweet.text}}
-                    </div>
+                </div>
+                <div class="card-body" style="min-height: 165px;">
+                    {{tweet.text}}
                 </div>
             </div>
         </div>
+    </div>
+    <ng-template #noTweetsFound>
+        <div class="row">
+            <div class="col-12">
+                <p>No Tweets Found</p>
+            </div>
+        </div>
+    </ng-template>
 </div>
 
 <toaster-container [toasterconfig]="toasterConfig"></toaster-container>
