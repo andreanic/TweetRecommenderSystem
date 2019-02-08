@@ -36,8 +36,8 @@ export class TweetRepositoryService {
                     .catch((e: any) => Observable.throw(JSON.parse(e._body)));
   }
 
-  public getRecommandedTweets(): Observable<TweetDTO[]>{
-    return this.http.get(`${environment.server.url}/user/getRecommandedTweets`,this.utils.createHeaderOptions())
+  public getRecommendedTweets(): Observable<TweetDTO[]>{
+    return this.http.get(`${environment.server.url}/user/getRecommendedTweets`,this.utils.createHeaderOptions())
                     .map((res: Response) => <TweetDTO[]>res.json().payload)
                     .catch((e: any) => Observable.throw(JSON.parse(e._body)));
   }

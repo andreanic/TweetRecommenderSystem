@@ -26,7 +26,7 @@ export class DashboardService {
       console.log(err.payload);
     });
 
-    this.tweetRepository.getRecommandedTweets().subscribe(response => {
+    this.tweetRepository.getRecommendedTweets().subscribe(response => {
       this.recommandedTweets = response;
     }, err => {
       console.log(err.payload);

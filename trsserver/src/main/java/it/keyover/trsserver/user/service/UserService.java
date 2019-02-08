@@ -89,7 +89,7 @@ public class UserService implements IUserService {
 	
 
 	@Override
-	public List<Tweet> getRecommandedTweets(User user) throws BaseException {
+	public List<Tweet> getRecommendedTweets(User user) throws BaseException {
 		List<String> twitterids = new ArrayList<String>();
 		List<String> twitteridsNoKeyword = new ArrayList<String>();
 		for(String category : user.getPreferences()) {

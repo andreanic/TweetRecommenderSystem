@@ -80,14 +80,14 @@ public class UserController extends ExceptionHandlerController{
 	}
 	
 	@GET
-	@RequestMapping("/getRecommandedTweets")
+	@RequestMapping("/getRecommendedTweets")
 	@ResponseBody
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public ResponseEntity<ApiBaseResponse> getRecommandedTweets(HttpServletRequest request, Authentication auth) throws AppException {
+	public ResponseEntity<ApiBaseResponse> getRecommendedTweets(HttpServletRequest request, Authentication auth) throws AppException {
 		try {
 			User user = (User) auth.getPrincipal();
-			List<Tweet> tweetsLiked = userService.getRecommandedTweets(user);
+			List<Tweet> tweetsLiked = userService.getRecommendedTweets(user);
 			ApiBaseResponse<List<Tweet>> abp = new ApiBaseResponse<List<Tweet>>(request.getRequestURI(),tweetsLiked);
 			return new ResponseEntity<ApiBaseResponse>(abp,HttpStatus.OK);
 		} catch (BaseException e) {
