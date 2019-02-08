@@ -18,6 +18,10 @@ export class RegistrationService {
               private userRepository: UserRepositoryService,) { }
 
   public initSelectionArrays(): void{
+    this.username = "";
+    this.password = "";
+    this.selectedCategories = [];
+    this.selectedTweets = [];
     this.tweetRepository.getCategories().subscribe(response => {
       this.categories = response;
     }, err => {

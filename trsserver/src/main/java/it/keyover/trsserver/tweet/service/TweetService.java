@@ -31,7 +31,9 @@ import it.keyover.trsserver.tweet.model.SearchDTO;
 import it.keyover.trsserver.tweet.repository.HashtagRepository;
 import it.keyover.trsserver.tweet.repository.TweetRepository;
 import it.keyover.trsserver.tweet.repository.TwitterUserRepository;
+import it.keyover.trsserver.user.repository.UserRepository;
 import it.keyover.trsserver.util.PropertyReader;
+import it.keyover.trsserver.util.SessionHelper;
 import twitter4j.HashtagEntity;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -49,12 +51,14 @@ public class TweetService implements ITweetService {
 	private HashtagRepository hashtagRepository;
 	@Autowired
 	private TwitterUserRepository twitterUserRepository;
+	@Autowired
+	private UserRepository userRepository;
 	
 	@Autowired
 	private ILuceneService luceneService;
 	
 	@Override
-	public Integer retrieveTweets(String category) throws BaseException{
+	public Integer retrieveTweetsFromCategory(String category) throws BaseException{
 		Integer tweetsRetrieved = 0;
 		
 		List<TwitterUser> twitterUsers = twitterUserRepository.findByCategory(category);
@@ -65,14 +69,14 @@ public class TweetService implements ITweetService {
 		
 		for(TwitterUser twitterUser : twitterUsers) {
 			logger.info("Fetching tweet for " + twitterUser.getName());
-			tweetsRetrieved = Integer.sum(tweetsRetrieved, this.retrieveTweet(twitterUser.getScreenName(), twitterUser.getCategory()));
+			tweetsRetrieved = Integer.sum(tweetsRetrieved, this.retrieveTweetsFromUser(twitterUser.getScreenName(), twitterUser.getCategory()));
 		}
 		
 		return tweetsRetrieved;
 	}
 
 	@Override
-	public Integer retrieveTweet(String screenName, String category) throws BaseException{
+	public Integer retrieveTweetsFromUser(String screenName, String category) throws BaseException{
 		try {		
 			Integer tweetsRetrieved = 0;
 			
@@ -174,26 +178,38 @@ public class TweetService implements ITweetService {
 		if(categories.length == 0) {
 			throw new RetrieveCategoriesException();
 		}
-		logger.info("Categories retrieved");
+
 		return categories;
 	}
 
 	@Override
 	public List<Tweet> getTweetsByQueryAndCategory(SearchDTO search) throws BaseException {
-		List<String> categories = new ArrayList<String>();
-		if(search.getCategory() != null) {
-			categories.add(search.getCategory());
-		}
-		
-		List<String> twitterids = luceneService.getTweetsTwitterIdFromIndex(search.getQuery(), categories, search.getSearchType());
+		List<String> twitterids = luceneService.getTweetsTwitterIdFromIndex(search.getQuery(), search.getCategory(), search.getSearchType());	
 		
 		return tweetRepository.findByTwitteridIn(twitterids);
 	}
 
 	@Override
 	public List<Tweet> getTweetsByQueryAndUserPreferences(SearchDTO search, User user)	throws BaseException {
-		// TODO Auto-generated method stub
-		return null;
+		List<String> twitterids = new ArrayList<String>();
+		for(String category : user.getPreferences()) {
+			twitterids.addAll(luceneService.getTweetsTwitterIdFromIndex(search.getQuery(), category, search.getSearchType()));
+		}
+		
+		return tweetRepository.findByTwitteridIn(twitterids);
 	}
-	
+
+	@Override
+	public Integer removeShortUrlTweets() {
+		List<Tweet> tweets = (List<Tweet>) tweetRepository.findAll();
+		Integer removed = 0;
+		for(Tweet tweet : tweets) {
+			if((tweet.getText().contains("http") && tweet.getText().length() < 30) || (tweet.getText().length() < 10)) {
+				tweetRepository.delete(tweet);
+				removed++;
+			}
+		}
+		
+		return removed;
+	}	
 }

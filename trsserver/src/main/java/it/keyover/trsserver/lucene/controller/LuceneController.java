@@ -1,5 +1,7 @@
 package it.keyover.trsserver.lucene.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import it.keyover.trsserver.exception.AppException;
 import it.keyover.trsserver.exception.BaseException;
 import it.keyover.trsserver.exception.ExceptionHandlerController;
+import it.keyover.trsserver.lucene.model.SearchTypeDTO;
 import it.keyover.trsserver.lucene.service.ILuceneService;
 import it.keyover.trsserver.model.ApiBaseResponse;
 import it.keyover.trsserver.tweet.service.TweetService;
@@ -38,10 +41,11 @@ public class LuceneController extends ExceptionHandlerController {
 	public ResponseEntity<ApiBaseResponse> createIndex(HttpServletRequest request) throws AppException {
 		try {
 			String success = luceneService.createIndex();
-			ApiBaseResponse<String> apr = new ApiBaseResponse<String>(request.getRequestURI(),success);
-	        return new ResponseEntity<ApiBaseResponse>(apr,HttpStatus.OK);
+			ApiBaseResponse<String> abp = new ApiBaseResponse<String>(request.getRequestURI(),success);
+	        return new ResponseEntity<ApiBaseResponse>(abp,HttpStatus.OK);
 		} catch (BaseException e) {
 			throw new AppException(e);
 		}
 	}
+	
 }

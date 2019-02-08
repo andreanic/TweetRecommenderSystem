@@ -56,8 +56,8 @@ public class UserController extends ExceptionHandlerController{
 	public ResponseEntity<ApiBaseResponse> login(HttpServletRequest request, @RequestBody User user) throws AppException {
 		try {
 			String success = userService.login(user);
-			ApiBaseResponse<String> apr = new ApiBaseResponse<String>(request.getRequestURI(),success);
-	        return new ResponseEntity<ApiBaseResponse>(apr,HttpStatus.OK);
+			ApiBaseResponse<String> abp = new ApiBaseResponse<String>(request.getRequestURI(),success);
+	        return new ResponseEntity<ApiBaseResponse>(abp,HttpStatus.OK);
 		} catch (BaseException e) {
 			throw new AppException(e);
 		}
@@ -72,8 +72,40 @@ public class UserController extends ExceptionHandlerController{
 		try {
 			User user = (User) auth.getPrincipal();
 			List<Tweet> tweetsLiked = userService.getLikedTweets(user.getUsername());
-			ApiBaseResponse<List<Tweet>> apr = new ApiBaseResponse<List<Tweet>>(request.getRequestURI(),tweetsLiked);
-			return new ResponseEntity<ApiBaseResponse>(apr,HttpStatus.OK);
+			ApiBaseResponse<List<Tweet>> abp = new ApiBaseResponse<List<Tweet>>(request.getRequestURI(),tweetsLiked);
+			return new ResponseEntity<ApiBaseResponse>(abp,HttpStatus.OK);
+		} catch (BaseException e) {
+			throw new AppException(e);
+		}
+	}
+	
+	@GET
+	@RequestMapping("/getRecommandedTweets")
+	@ResponseBody
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+	public ResponseEntity<ApiBaseResponse> getRecommandedTweets(HttpServletRequest request, Authentication auth) throws AppException {
+		try {
+			User user = (User) auth.getPrincipal();
+			List<Tweet> tweetsLiked = userService.getRecommandedTweets(user);
+			ApiBaseResponse<List<Tweet>> abp = new ApiBaseResponse<List<Tweet>>(request.getRequestURI(),tweetsLiked);
+			return new ResponseEntity<ApiBaseResponse>(abp,HttpStatus.OK);
+		} catch (BaseException e) {
+			throw new AppException(e);
+		}
+	}
+	
+	@POST
+	@RequestMapping("/addLikeToTweet")
+	@ResponseBody
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+	public ResponseEntity<ApiBaseResponse> addLikeToTweet(HttpServletRequest request, Authentication auth, @RequestBody Tweet tweet) throws AppException {
+		try {
+			User user = (User) auth.getPrincipal();
+			userService.addLikeToTweet(user, tweet);
+			ApiBaseResponse<Void> abp = new ApiBaseResponse<Void>(request.getRequestURI(),null);
+			return new ResponseEntity<ApiBaseResponse>(abp,HttpStatus.OK);
 		} catch (BaseException e) {
 			throw new AppException(e);
 		}

@@ -42,8 +42,14 @@ export class TweetRepositoryService {
                     .catch((e: any) => Observable.throw(JSON.parse(e._body)));
   }
 
-  public fullTextSearch(data: any): Observable<TweetDTO[]>{
-    return this.http.post(`${environment.server.url}/user/getRecommandedTweets`,data,this.utils.createHeaderOptions())
+  public getTweetsByQueryAndCategory(data: any): Observable<TweetDTO[]>{
+    return this.http.post(`${environment.server.url}/tweet/getTweetsByQueryAndCategory`,data,this.utils.createHeaderOptions())
+                    .map((res: Response) => <TweetDTO[]>res.json().payload)
+                    .catch((e: any) => Observable.throw(JSON.parse(e._body)));
+  }
+
+  public getTweetsByQueryAndUserPreferences(data: any): Observable<TweetDTO[]>{
+    return this.http.post(`${environment.server.url}/tweet/getTweetsByQueryAndUserPreferences`,data,this.utils.createHeaderOptions())
                     .map((res: Response) => <TweetDTO[]>res.json().payload)
                     .catch((e: any) => Observable.throw(JSON.parse(e._body)));
   }

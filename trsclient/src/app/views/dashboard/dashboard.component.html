@@ -15,7 +15,7 @@
                         <h4 class="col-10">{{tweet.twitterUser.name}}</h4>
                     </div>
                 </div>
-                <div class="card-body" style="min-height: 165px;">
+                <div class="card-body" style="min-height: 185px;">
                     {{tweet.text}}
                 </div>
             </div>
@@ -38,8 +38,11 @@
                         <h4 class="col-10">{{tweet.twitterUser.name}}</h4>
                     </div>
                 </div>
-                <div class="card-body" style="min-height: 165px;">
+                <div class="card-body" style="min-height: 185px;">
                     {{tweet.text}}
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary" type="button" (click)="addLikeToTweet(i)"><i class="fa fa-heart-o"></i>&nbsp;Like</button>
                 </div>
             </div>
         </div>

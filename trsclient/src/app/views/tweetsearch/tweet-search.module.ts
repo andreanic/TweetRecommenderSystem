@@ -5,6 +5,7 @@ import { TweetSearchComponent } from './tweet-search.component';
 import { TweetSearchRoutingModule } from './tweet-search-routing.module';
 import { SharedModule } from 'app/module/shared-module.module';
 import { TweetSearchService } from './tweet-search.service';
+import { DashboardService } from '../dashboard/dashboard.service';
 
 @NgModule({
   imports: [
@@ -13,6 +14,6 @@ import { TweetSearchService } from './tweet-search.service';
     SharedModule
   ],
   declarations: [ TweetSearchComponent ],
-  providers: [TweetSearchService]
+  providers: [TweetSearchService, DashboardService]
 })
 export class TweetSearchModule { }

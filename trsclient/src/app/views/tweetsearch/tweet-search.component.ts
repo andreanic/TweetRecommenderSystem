@@ -3,6 +3,7 @@ import { TweetSearchService } from './tweet-search.service';
 import { UtilService } from 'app/service/util.service';
 import { ToasterConfig, ToasterService } from 'angular2-toaster';
 import { TweetDTO } from 'app/model/TweetDTO';
+import { DashboardService } from '../dashboard/dashboard.service';
 
 @Component({
   templateUrl: 'tweet-search.component.html' ,
@@ -14,27 +15,60 @@ export class TweetSearchComponent implements OnInit{
 
   private isQueryLoading: boolean = false;
   private toasterConfig: ToasterConfig;
-  private tweetsFound: TweetDTO[];
 
   constructor(private tweetSearchService: TweetSearchService,
+              private dashboardService: DashboardService,
               private toasterService: ToasterService,
-              private utils: UtilService) { }
+              private utils: UtilService) { 
+                this.toasterConfig = this.utils.getToasterConfig();
+                this.tweetSearchService.initArrays();
+              }
 
   ngOnInit(){
-    this.toasterConfig = this.utils.getToasterConfig();
-    this.tweetSearchService.initCategoriesArray();
+
   }
 
-  public fullTextSearch(){
+  public getTweets(){
     this.isQueryLoading=true;
-    this.tweetSearchService.fullTextSearch()
+    if(this.tweetSearchService.$userPreferencesSearch){
+      this.getTweetsByQueryAndUserPreferences();
+    }
+    else{
+      this.getTweetsByQueryAndCategory();
+    }
+  }
+
+  public getTweetsByQueryAndCategory(): void{
+    this.tweetSearchService.getTweetsByQueryAndCategory()
     .finally(() => {
       this.isQueryLoading = false;
-      this.tweetsFound = this.tweetSearchService.$tweetsFound;
     }).subscribe(response => {
-      this.utils.showToastMessage("success","Query Success!","Retrieved "+ response.length + " tweets",this.toasterService);
+      this.utils.showToastMessage("success","Query By Cateogy Success!","Retrieved "+ response.length + " tweets",this.toasterService);
     }, err => {
       this.utils.showToastMessage("error","Query Error!",err.payload,this.toasterService);
     })
+  }
+
+  public getTweetsByQueryAndUserPreferences(): void{
+    this.tweetSearchService.getTweetsByQueryAndUserPreferences()
+    .finally(() => {
+      this.isQueryLoading = false;
+    }).subscribe(response => {
+      this.utils.showToastMessage("success","Query By User Success!","Retrieved "+ response.length + " tweets",this.toasterService);
+    }, err => {
+      this.utils.showToastMessage("error","Query Error!",err.payload,this.toasterService);
+    })
+  }
+
+  public setUserPreferencesSearch(): void{
+    this.tweetSearchService.setUserPreferencesSearch();
+  }
+
+  public addLikeToTweet(index:number): void{
+    this.tweetSearchService.addLikeToTweet(index).subscribe(response => {
+      this.dashboardService.initTweetsArrays();
+    }, err => {
+      console.error(err);
+    });
   }
 }

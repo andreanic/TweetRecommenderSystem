@@ -21,6 +21,7 @@ import { TableFilterPipe } from '../filter/table-filter.pipe';
 import { BsDatepickerModule } from '../../../node_modules/ngx-bootstrap';
 import { TweetRepositoryService } from 'app/repository/tweet/tweet-repository.service';
 import { UserRepositoryService } from 'app/repository/user/user-repository.service';
+import { LuceneRepositoryService } from 'app/repository/lucene/lucene-repository.service';
 
 defineLocale('it', itLocale);
 
@@ -48,6 +49,7 @@ defineLocale('it', itLocale);
     LoginRepositoryService,
     TweetRepositoryService,
     UserRepositoryService,
+    LuceneRepositoryService,
     BsLocaleService,
     ToasterService 
   ],

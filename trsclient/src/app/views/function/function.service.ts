@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TweetRepositoryService } from 'app/repository/tweet/tweet-repository.service';
 import { Observable } from 'rxjs';
+import { LuceneRepositoryService } from 'app/repository/lucene/lucene-repository.service';
 
 @Injectable()
 export class FunctionService {
@@ -8,7 +9,8 @@ export class FunctionService {
   private categories: String[] = [];
   private category: String;
 
-  constructor(private tweetRepository: TweetRepositoryService){}
+  constructor(private tweetRepository: TweetRepositoryService,
+              private luceneRepository: LuceneRepositoryService){}
 
   public initSelectArray(): void{
     this.tweetRepository.getCategories().subscribe(response => {
@@ -29,6 +31,10 @@ export class FunctionService {
         this.category = this.categories[0];
       }
     }
+  }
+
+  public createIndex(): Observable<string>{
+    return this.luceneRepository.createIndex();
   }
 
     /**

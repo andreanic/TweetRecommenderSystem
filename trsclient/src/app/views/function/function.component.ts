@@ -14,6 +14,7 @@ export class FunctionComponent implements OnInit{
   
   private toasterConfig: ToasterConfig;
   private isFunctionRetrieving: boolean = false;
+  private isIndexCreating: boolean = false;
 
   constructor(private toasterService: ToasterService,
               private utils: UtilService,
@@ -34,6 +35,17 @@ export class FunctionComponent implements OnInit{
       this.functionService.removeCategoryRetrieved();
     }, err => {
       this.utils.showToastMessage("error","Tweets Retrieve Error!",err.payload,this.toasterService);
+    });
+  }
+
+  public createIndex(): void{
+    this.isIndexCreating = true;
+    this.functionService.createIndex().finally(() => {
+      this.isIndexCreating = false;
+    }).subscribe(response => {
+      this.utils.showToastMessage("success","Index Creation Success!",response,this.toasterService);
+    }, err => {
+      this.utils.showToastMessage("error","Index Creation Error!",err.payload,this.toasterService);
     });
   }
 }

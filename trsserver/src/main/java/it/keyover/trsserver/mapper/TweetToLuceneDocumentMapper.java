@@ -14,6 +14,7 @@ public class TweetToLuceneDocumentMapper {
 	public static final String TWITTERID = "twitterid";
 	public static final String TEXT = "text";
 	public static final String CATEGORY = "category";
+	public static final String USER = "user";
 	
 	public static Document map(Tweet tweet) throws BaseException{
 		if(tweet == null) {
@@ -25,6 +26,7 @@ public class TweetToLuceneDocumentMapper {
 		doc.add(new StringField(TWITTERID, tweet.getTwitterid(), Field.Store.YES));
 		doc.add(new TextField(TEXT, tweet.getText(), Field.Store.NO));
 		doc.add(new StringField(CATEGORY, tweet.getCategory(), Field.Store.NO));
+		//doc.add(new StringField(USER, tweet.getTwitterUser().getName(), Field.Store.YES));
 			
 		return doc;
 	}

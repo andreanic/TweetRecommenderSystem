@@ -10,4 +10,7 @@ public interface IUserService {
 	public String registerUser(User user) throws BaseException;
 	public String login(User user) throws BaseException;
 	public List<Tweet> getLikedTweets(String username) throws BaseException;
+	public List<Tweet> getRecommandedTweets(User user) throws BaseException;
+	public void addLikeToTweet(User user, Tweet tweet) throws BaseException;
+	public void addTokenKeywordsToUser(User user, String query) throws BaseException;
 }

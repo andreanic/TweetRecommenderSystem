@@ -21,10 +21,20 @@ export class DashboardComponent implements OnInit{
   private toasterConfig: ToasterConfig;
 
   constructor(private utils: UtilService,
-              private dashboardService: DashboardService){}
+              private dashboardService: DashboardService){
+                this.toasterConfig = this.utils.getToasterConfig();
+                this.dashboardService.initTweetsArrays();
+              }
 
   ngOnInit(){
-    this.toasterConfig = this.utils.getToasterConfig();
-    this.dashboardService.initTweetsArrays();
+
+  }
+
+  public addLikeToTweet(index:number): void{
+    this.dashboardService.addLikeToTweet(index).subscribe(response => {
+      this.dashboardService.initTweetsArrays();
+    }, err => {
+      console.error(err);
+    });
   }
 }

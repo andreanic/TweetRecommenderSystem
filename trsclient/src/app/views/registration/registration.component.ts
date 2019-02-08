@@ -9,52 +9,54 @@ import { RegistrationService } from './registration.service';
 @Component({
   templateUrl: 'registration.component.html',
   styleUrls: ['../../../../node_modules/ladda/dist/ladda-themeless.min.css',
-  '../../../scss/vendors/toastr/toastr.scss'],
+    '../../../scss/vendors/toastr/toastr.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class RegistrationComponent implements OnInit{
+export class RegistrationComponent implements OnInit {
 
   private toasterConfig: ToasterConfig;
   private isRegistrationLoading: boolean = false;
 
-  constructor(private registrationService: RegistrationService,              
-              private toasterService: ToasterService,
-              private utils: UtilService,
-              private router: Router) { }
+  constructor(private registrationService: RegistrationService,
+    private toasterService: ToasterService,
+    private utils: UtilService,
+    private router: Router) {
 
-  ngOnInit(){
     this.toasterConfig = this.utils.getToasterConfig();
     this.registrationService.initSelectionArrays();
   }
 
-  public selectTweet(i: number): void{
-    this.registrationService.selectTweet(i); 
-    
+  ngOnInit() {
   }
 
-  public selectCategory(category: string): void{
+  public selectTweet(i: number): void {
+    this.registrationService.selectTweet(i);
+
+  }
+
+  public selectCategory(category: string): void {
     this.registrationService.selectCategory(category);
   }
 
-  public isTweetSelected(tweet: any): boolean{
+  public isTweetSelected(tweet: any): boolean {
     return this.registrationService.isTweetSelected(tweet);
   }
 
-  public saveUser(): void{
+  public saveUser(): void {
     this.isRegistrationLoading = true;
     this.registrationService.saveUser()
-    .finally(() => {
-      this.isRegistrationLoading = false;
-    })
-    .subscribe(response => {
-      this.utils.showToastMessage("success","Registration Success!","You are now registered",this.toasterService);
-      this.router.navigate(['/dashboard']);
-    }, err => {
-      this.utils.showToastMessage("error","Registration Error!",err.payload,this.toasterService);
-    });
+      .finally(() => {
+        this.isRegistrationLoading = false;
+      })
+      .subscribe(response => {
+        this.utils.showToastMessage("success", "Registration Success!", "You are now registered", this.toasterService);
+        this.router.navigate(['/dashboard']);
+      }, err => {
+        this.utils.showToastMessage("error", "Registration Error!", err.payload, this.toasterService);
+      });
   }
 
-  public resetForm(): void{
+  public resetForm(): void {
     this.registrationService.resetForm();
   }
 }

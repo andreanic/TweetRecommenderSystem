@@ -5,6 +5,7 @@ import { UtilService } from 'app/service/util.service';
 import { CookieService } from 'ngx-cookie-service';
 import { TweetRepositoryService } from 'app/repository/tweet/tweet-repository.service';
 import { TweetDTO } from 'app/model/TweetDTO';
+import { UserRepositoryService } from 'app/repository/user/user-repository.service';
 
 @Injectable()
 export class DashboardService {
@@ -13,9 +14,12 @@ export class DashboardService {
   private recommandedTweets: TweetDTO[] = [];
 
   constructor(private tweetRepository: TweetRepositoryService,
+              private userRepository: UserRepositoryService,
               private utils: UtilService) { }
 
   public initTweetsArrays(){
+    this.likedTweets = [];
+    this.recommandedTweets = [];
     this.tweetRepository.getLikedTweets().subscribe(response => {
       this.likedTweets = response;
     }, err => {
@@ -27,6 +31,18 @@ export class DashboardService {
     }, err => {
       console.log(err.payload);
     })
+  }
+
+  public addLikeToTweet(index: number): Observable<void>{
+    return this.userRepository.addLikeToTweet(this.getSelectedTweet(index));
+  }
+
+  private getSelectedTweet(index: number): TweetDTO{
+    let tweet = this.recommandedTweets[index];
+
+    this.recommandedTweets.splice(index, 1);
+
+    return tweet;
   }
 
     /**

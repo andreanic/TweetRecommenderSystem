@@ -1,6 +1,18 @@
 <div class="animated fadeIn">
   <div class="row">
-    <div class="col-7">
+    <div class="col">
+      <fieldset class="form-group">
+        <label>Use Preferences</label>
+        <label class="switch switch-default switch-pill switch-primary-outline-alt">
+          <input type="checkbox" class="switch-input" [checked]="tweetSearchService.$userPreferencesSearch" (change)="setUserPreferencesSearch()">
+          <span class="switch-label"></span>
+          <span class="switch-handle"></span>
+        </label>
+      </fieldset>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
       <form>
         <div class="form-group">
           <label>Search Query</label>
@@ -9,22 +21,32 @@
             <input type="text" class="form-control" placeholder="Type your query here..." [(ngModel)]="tweetSearchService.$query"
               name="query" />
             <span class="input-group-btn">
-              <button class="btn btn-primary btn-sm" (click)="fullTextSearch()" data-style="expand-right" [ladda]='isQueryLoading'
+              <button class="btn btn-primary btn-sm" (click)="getTweets()" data-style="expand-right" [ladda]='isQueryLoading'
                 [disabled]="tweetSearchService.$query.length<3">Search</button>
             </span>
           </div>
         </div>
       </form>
     </div>
-    <div class="col-5">
+    <div class="col-4">
       <fieldset class="form-group">
-        <label>Category</label>
-        <select class="form-control" [(ngModel)]="tweetSearchService.$category">
-          <option>{{tweetSearchService.$allCategories}}</option>
-          <option *ngFor="let category of tweetSearchService.$categories">{{category}}</option>
+        <label>Search Type</label>
+        <select class="form-control" [(ngModel)]="tweetSearchService.$searchType">
+            <option [value]="0">Exact Match</option>
+            <option [value]="1">Smilar Match</option>
         </select>
       </fieldset>
     </div>
+    
+    <div class="col-4" *ngIf="!tweetSearchService.$userPreferencesSearch">
+        <fieldset class="form-group">
+          <label>Category</label>
+          <select class="form-control" [(ngModel)]="tweetSearchService.$category">
+            <option [selected]="true">{{tweetSearchService.$allCategories}}</option>
+            <option *ngFor="let category of tweetSearchService.$categories">{{category}}</option>
+          </select>
+        </fieldset>
+      </div>
   </div>
 
   <div *ngIf="tweetSearchService.$tweetsFound">
@@ -47,6 +69,9 @@
           <div class="card-body" style="min-height: 165px;">
             {{tweet.text}}
           </div>
+          <div class="card-footer">
+            <button class="btn btn-primary" type="button" (click)="addLikeToTweet(i)"><i class="fa fa-heart-o"></i>&nbsp;Like</button>
+        </div>
         </div>
       </div>
     </div>

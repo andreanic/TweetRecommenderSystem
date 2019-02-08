@@ -4,20 +4,30 @@ import { Observable } from 'rxjs';
 import { UserRepositoryService } from 'app/repository/user/user-repository.service';
 import { UserDTO } from 'app/model/UserDTO';
 import { TweetDTO } from 'app/model/TweetDTO';
+import { SearchTypeDTO } from 'app/model/SearchTypeDTO';
+import { LuceneRepositoryService } from 'app/repository/lucene/lucene-repository.service';
 
 @Injectable()
 export class TweetSearchService {
 
   private categories: String[] = [];
   private category: String;
+  private searchType: number = 0;
   private allCategories: String = "all categories";
   private query: String = "";
   private tweetsFound: TweetDTO[];
+  private userPreferencesSearch: boolean = false;
 
   constructor(private tweetRepository: TweetRepositoryService,
-              private userRepository: UserRepositoryService) { }
+              private userRepository: UserRepositoryService,
+              private luceneRepository: LuceneRepositoryService) { }
 
-  public initCategoriesArray(): void{
+  public initArrays(): void{
+    this.query = "";
+    this.category = this.allCategories;
+    this.searchType = 0;
+    this.tweetsFound = [];
+    this.userPreferencesSearch = false;
     this.tweetRepository.getCategories().subscribe(response => {
       this.categories = response;
     }, err => {
@@ -25,17 +35,41 @@ export class TweetSearchService {
     });
   }
 
-  public fullTextSearch(): Observable<TweetDTO[]>{
-    return this.tweetRepository.fullTextSearch(this.createQueryObject()).map(response => {
+  public getTweetsByQueryAndCategory(): Observable<TweetDTO[]>{
+    return this.tweetRepository.getTweetsByQueryAndCategory(this.createQueryObject()).map(response => {
       this.tweetsFound = response;
       return this.tweetsFound;
     });
+  }
+
+  public getTweetsByQueryAndUserPreferences(): Observable<TweetDTO[]>{
+    return this.tweetRepository.getTweetsByQueryAndUserPreferences(this.createQueryObject()).map(response => {
+      this.tweetsFound = response;
+      return this.tweetsFound;
+    });
+  }
+
+  public addLikeToTweet(index: number): Observable<void>{
+    return this.userRepository.addLikeToTweet(this.getSelectedTweet(index));
+  }
+
+  private getSelectedTweet(index: number): TweetDTO{
+    let tweet = this.tweetsFound[index];
+
+    this.tweetsFound.splice(index, 1);
+
+    return tweet;
+  }
+
+  public setUserPreferencesSearch(): void{
+    this.userPreferencesSearch = !this.userPreferencesSearch;
   }
 
   private createQueryObject(): any{
     let queryObject = {
       query: this.query,
       category: this.category == this.allCategories ? null : this.category,
+      searchType: this.searchType,
     }
 
     return queryObject;
@@ -121,6 +155,38 @@ export class TweetSearchService {
      */
 	public set $tweetsFound(value: TweetDTO[] ) {
 		this.tweetsFound = value;
+	}
+
+    /**
+     * Getter $searchType
+     * @return {number}
+     */
+	public get $searchType(): number {
+		return this.searchType;
+	}
+
+    /**
+     * Getter $userPreferencesSearch
+     * @return {boolean }
+     */
+	public get $userPreferencesSearch(): boolean  {
+		return this.userPreferencesSearch;
+	}
+
+    /**
+     * Setter $searchType
+     * @param {number} value
+     */
+	public set $searchType(value: number) {
+		this.searchType = value;
+	}
+
+    /**
+     * Setter $userPreferencesSearch
+     * @param {boolean } value
+     */
+	public set $userPreferencesSearch(value: boolean ) {
+		this.userPreferencesSearch = value;
 	}
 
 }
