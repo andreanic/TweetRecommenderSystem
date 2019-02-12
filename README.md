@@ -1,2 +1,2 @@
-# TweetRecomanderSystem
+# TweetRecommenderSystem
 Information Retrieval Project
