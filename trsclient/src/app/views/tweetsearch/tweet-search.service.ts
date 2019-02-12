@@ -26,7 +26,7 @@ export class TweetSearchService {
     this.query = "";
     this.category = this.allCategories;
     this.searchType = 0;
-    this.tweetsFound = [];
+    this.tweetsFound = null;
     this.userPreferencesSearch = false;
     this.tweetRepository.getCategories().subscribe(response => {
       this.categories = response;

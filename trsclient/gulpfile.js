@@ -11,8 +11,8 @@ gulp.task('war', function () {
     gulp.src(["dist/*"])
         .pipe(war({
             welcome: 'index.html',
-            displayName: 'UnibiblioWebMovClient'
+            displayName: 'TweetRecommenderSystem'
         }))
-        .pipe(zip('uwmclient.war'))
+        .pipe(zip('trsclient.war'))
         .pipe(gulp.dest("./target"));
 });
