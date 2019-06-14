@@ -47,8 +47,8 @@ public class TweetService implements ITweetService {
 	
 	@Autowired
 	private TweetRepository tweetRepository;
-	@Autowired
-	private HashtagRepository hashtagRepository;
+	//@Autowired
+	//private HashtagRepository hashtagRepository;
 	@Autowired
 	private TwitterUserRepository twitterUserRepository;
 	@Autowired
@@ -95,15 +95,15 @@ public class TweetService implements ITweetService {
 		        	logger.info(e.getHrMessage());
 		        }
 	        	
-	        	if(status.getHashtagEntities().length > 0) {
+	        	/*if(status.getHashtagEntities().length > 0) {
 	        		for(HashtagEntity hashtag : status.getHashtagEntities()) {
 		        		try{
-		        			this.saveHashtag(hashtag);
+		        			//this.saveHashtag(hashtag);
 		        		}catch(BaseException e) {
 		        			logger.info(e.getHrMessage());
 		        		}
 		        	}
-	        	}
+	        	}*/
 
 		    }		    
 		    return tweetsRetrieved;
@@ -124,7 +124,7 @@ public class TweetService implements ITweetService {
 		return tweetRepository.save(tweetToSave).getId();
 	}
 
-	@Override
+	/*@Override
 	public String saveHashtag(HashtagEntity hashtag) throws BaseException {
 		if(hashtagRepository.findByValue(hashtag.getText()).isPresent()) {
 			throw new HashtagAlreadExistException();
@@ -133,7 +133,8 @@ public class TweetService implements ITweetService {
 		Hashtag hashtagToSave = HashtagEntityToHashtagMapper.map(hashtag);
 
 		return hashtagRepository.save(hashtagToSave).getId();
-	}
+		return null;
+	}*/
 	
 	@Override
 	public Long saveTwitterUser(String screenName, String category) throws BaseException{		

@@ -14,7 +14,7 @@ public interface ITweetService {
 	public Integer retrieveTweetsFromCategory(String category) throws BaseException;
 	public Integer retrieveTweetsFromUser(String screenName, String category) throws BaseException;
 	public Long saveTweet(Status tweet, String category) throws BaseException;
-	public String saveHashtag(HashtagEntity hashtag) throws BaseException;
+	//public String saveHashtag(HashtagEntity hashtag) throws BaseException;
 	public Long saveTwitterUser(String screenName, String category) throws BaseException;
 	public String[] getCategories() throws BaseException;
 	public List<Tweet> getOneTweetByCategory() throws BaseException;

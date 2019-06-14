@@ -53,7 +53,7 @@ public class TweetController extends ExceptionHandlerController{
 	@ResponseBody
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-	public ResponseEntity<ApiBaseResponse> remove(HttpServletRequest request) throws AppException {
+	public ResponseEntity<ApiBaseResponse> remove(HttpServletRequest request) {
 
 			Integer tweetsRetrieved = tweetService.removeShortUrlTweets();
 			ApiBaseResponse<String> abp = new ApiBaseResponse<String>(request.getRequestURI(),"Removed " + tweetsRetrieved + " tweets from database collection");
