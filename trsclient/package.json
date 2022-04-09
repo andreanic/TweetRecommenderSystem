@@ -45,7 +45,7 @@
     "font-awesome": "^4.7.0",
     "jspdf": "^1.3.5",
     "jspdf-autotable": "^2.3.2",
-    "moment": "2.19.3",
+    "moment": "2.29.2",
     "ng-pdf-make": "0.0.2",
     "ng-select": "1.0.0-rc.3",
     "ng2-ace-editor": "0.3.4",
